@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RpcConfig.h"
+
 class MprpcApplication
 {
 public:
@@ -9,4 +11,6 @@ private:
     MprpcApplication(){}
     MprpcApplication(const MprpcApplication&) = delete;
     MprpcApplication(MprpcApplication&&) = delete;
+
+    static RpcConfig rpc_config;
 };

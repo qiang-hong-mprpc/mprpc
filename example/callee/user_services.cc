@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     RpcProvider provider;
     provider.NotifyService(new UserService());
 
-    // 启动rpc节点服务 进入堵塞 直到用户调用  
+    // 启动rpc节点服务 进入堵塞 直到用户调用
     provider.Run();
 
     return 0;
