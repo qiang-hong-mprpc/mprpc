@@ -21,6 +21,7 @@ private:
     muduo::net::EventLoop mprpc_event_loop;
     void OnConnection(const muduo::net::TcpConnectionPtr &);
     void OnMessage(const muduo::net::TcpConnectionPtr &, muduo::net::Buffer *, muduo::Timestamp);
+    void SendRpcResponse(const muduo::net::TcpConnectionPtr &, google::protobuf::Message *);
 
     struct ServiceInfo
     {

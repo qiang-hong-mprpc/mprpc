@@ -1,4 +1,7 @@
-aux_source_directory(. SRC_LIST)
+set(SRC_LIST MprpcApplication.cc 
+             RpcConfig.cc
+             RpcProvider.cc
+             client_request.pb.cc)
 
 add_library(mprpc ${SRC_LIST})
 target_link_libraries(mprpc muduo_net muduo_base pthread)
