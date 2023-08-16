@@ -11,21 +11,42 @@ int main(int argc, char **argv)
 
     example::UserServicesRpc_Stub stub(new MprpcChannel());
 
-    example::LoginRequest request;
-    request.set_name("qiang.lv");
-    request.set_pwd("1234");
+    // Register
+    example::RegisterRequest register_request;
+    register_request.set_id(1234);
+    register_request.set_name("qiang.lv");
+    register_request.set_pwd("1234");
 
-    example::LoginResponse response;
+    example::RegisterResponse register_response;
 
-    stub.Login(nullptr, &request, &response, nullptr);
+    stub.Register(nullptr, &register_request, &register_response, nullptr);
 
-    if (response.rc().errcode() == 0)
+    if (register_response.rc().errcode() == 0)
     {
-        std::cout << "rpc login response success: " << response.success() << std::endl;
+        std::cout << "rpc register response success: " << register_response.success() << std::endl;
     }
     else
     {
-        std::cout << "rpc login response error: " << response.rc().errmsg() << std::endl;
+        std::cout << "rpc register response error: " << register_response.rc().errmsg() << std::endl;
+    }
+
+
+    // Login 
+    example::LoginRequest login_request;
+    login_request.set_name("qiang.lv");
+    login_request.set_pwd("1234");
+
+    example::LoginResponse login_response;
+
+    stub.Login(nullptr, &login_request, &login_response, nullptr);
+
+    if (login_response.rc().errcode() == 0)
+    {
+        std::cout << "rpc login response success: " << login_response.success() << std::endl;
+    }
+    else
+    {
+        std::cout << "rpc login response error: " << login_response.rc().errmsg() << std::endl;
     }
     return 0;
 }
