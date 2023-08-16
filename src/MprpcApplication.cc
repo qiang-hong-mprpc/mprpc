@@ -45,10 +45,10 @@ void MprpcApplication::Init(int argc, char **argv)
     // read and load config file
     //  ip port zookeeper_ip zookeeper_port
     rpc_config.LoadConfigFile(config.c_str());
-    std::cout << "rpc service ip: " << rpc_config.Load("rpc_service_ip") << std::endl;
-    std::cout << "rpc service port: " << rpc_config.Load("rpc_service_port") << std::endl;
-    std::cout << "zookeeper ip: " << rpc_config.Load("zookeeper_ip") << std::endl;
-    std::cout << "zookeeper port: " << rpc_config.Load("zookeeper_port") << std::endl;
+    // std::cout << "rpc service ip: " << rpc_config.Load("rpc_service_ip") << std::endl;
+    // std::cout << "rpc service port: " << rpc_config.Load("rpc_service_port") << std::endl;
+    // std::cout << "zookeeper ip: " << rpc_config.Load("zookeeper_ip") << std::endl;
+    // std::cout << "zookeeper port: " << rpc_config.Load("zookeeper_port") << std::endl;
 }
 
 MprpcApplication &MprpcApplication::GetInstance()

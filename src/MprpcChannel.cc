@@ -49,9 +49,19 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor *method,
         std::cout << "Serialize rpc header error!" << std::endl;
         return;
     }
+
+    std::cout << "======================================" << std::endl;
+    std::cout << "header size: " << header_size << std::endl;
+    std::cout << "rpc header str: " << rpc_header_str << std::endl;
+    std::cout << "service name: " << service_name << std::endl;
+    std::cout << "method name: " << method_name << std::endl;
+    std::cout << "args size: " << args_size << std::endl;
+    std::cout << "args str: " << args_str << std::endl;
+    std::cout << "======================================" << std::endl;
+
     // format: header_size + rpc_header_str + service_name + method_nam + args_size+ + args(struct client_request)
     std::string send_str;
-    send_str.insert(0, std::string((char *)&header_size), 4);
+    send_str.insert(0, std::string((char *)&header_size, 4));
     send_str += rpc_header_str + args_str;
 
     int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -70,15 +80,17 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor *method,
 
     service_addr.sin_addr.s_addr = inet_addr(rpc_service_ip.c_str());
 
-    if (connect(fd, (struct sockaddr *)&service_addr, sizeof(service_addr) == -1))
+    if (-1 == connect(fd, (struct sockaddr *)&service_addr, sizeof(service_addr)))
     {
         std::cout << "connect error! content: " << errno << std::endl;
+        close(fd);
         exit(EXIT_FAILURE);
     }
 
-    if (send(fd, send_str.c_str(), send_str.size(), 0) == -1)
+    if (-1 == send(fd, send_str.c_str(), send_str.size(), 0))
     {
         std::cout << "send error! content: " << errno << std::endl;
+        close(fd);
         return;
     }
 
@@ -86,13 +98,15 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor *method,
     int size = 0;
     if (-1 == (size = recv(fd, buf, 1024, 0)))
     {
-        std::cout << "recv error! content: " << errno << std::endl; 
+        std::cout << "recv error! content: " << errno << std::endl;
+        close(fd);
         return;
     }
 
     std::string response_str(buf, 0, size);
-    if(!response->ParseFromString(response_str)){
-        std::cout<<"parse error! response_str: "<<response_str<<std::endl;
+    if (!response->ParseFromString(response_str))
+    {
+        std::cout << "parse error! response_str: " << response_str << std::endl;
         close(fd);
         return;
     }
