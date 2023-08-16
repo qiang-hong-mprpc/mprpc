@@ -56,3 +56,8 @@ MprpcApplication &MprpcApplication::GetInstance()
     static MprpcApplication app;
     return app;
 }
+
+RpcConfig &MprpcApplication::GetRpcConfig()
+{
+    return rpc_config;
+}

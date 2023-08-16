@@ -7,6 +7,7 @@ class MprpcApplication
 public:
     static void Init(int argc, char **argv);
     static MprpcApplication& GetInstance();
+    static RpcConfig& GetRpcConfig();
 private:
     MprpcApplication(){}
     MprpcApplication(const MprpcApplication&) = delete;
