@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include "../user.pb.h"
+#include "mprpcApplication.h"
+#include "rpcProvider.h"
 
 using namespace std;
 
@@ -42,14 +44,14 @@ public:
 
 int main(int argc, char **argv){
     //调用框架的初始化
-    // MprpcApplication::Init(argc, argv);
+    MprpcApplication::Init(argc, argv);
 
-    // //provider是一个网络服务对象，把Userservice对象发布到rpc节点上
-    // RpcProvider provider;
-    // provider.NotifyService(new UserService());
+    //provider是一个网络服务对象，把Userservice对象发布到rpc节点上
+    RpcProvider provider;
+    provider.NotifyService(new UserService());
 
-    // //启动一个rpc服务节点，Run以后，进程进入阻塞，等待远程请求
-    // provider.Run();
+    //启动一个rpc服务节点，Run以后，进程进入阻塞，等待远程请求
+    provider.Run();
 
     return 0;
 }
