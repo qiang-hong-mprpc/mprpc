@@ -1,12 +1,27 @@
 #include <string>
 #include <functional>
 #include <iostream>
+#include <google/protobuf/descriptor.h>
 
 #include "RpcProvider.h"
 #include "MprpcApplication.h"
 
 void RpcProvider::NotifyService(::google::protobuf::Service *service)
 {
+    ServiceInfo service_info;
+    const google::protobuf::ServiceDescriptor *descriptor = service->GetDescriptor();
+    const std::string service_name = descriptor->name();
+    int service_message_count = descriptor->method_count();
+    std::cout << "service name: " << service_name << std::endl;
+    for (int i = 0; i < service_message_count; i++)
+    {
+        const google::protobuf::MethodDescriptor *method = descriptor->method(i);
+        std::string method_name = method->name();
+        service_info.provider_method_map.insert({method_name, method});
+        std::cout << "method name: " << method_name << std::endl;
+    }
+    service_info.service = service;
+    serivce_map.insert({service_name, service_info});
 }
 
 void RpcProvider::Run()

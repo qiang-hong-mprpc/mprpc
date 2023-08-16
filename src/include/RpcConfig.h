@@ -10,7 +10,5 @@ public:
 
 private:
     std::unordered_map<std::string, std::string> config_map;
-
     void trim(std::string &str);
-
 };
