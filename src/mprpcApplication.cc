@@ -39,13 +39,17 @@ void MprpcApplication::Init(int argc, char **argv){
     //加载配置文件 rpcserver_ip=   rpcserver_port=   zookepper_ip =      zookepper_port = 
     m_config.LoadConfigFile(config_file.c_str()); 
 
-    std::cout << "rpcserverip:" << m_config.Load("rpcserverip") << std::endl;
-    std::cout << "rpcserverport:" << m_config.Load("rpcserverport") << std::endl;
-    std::cout << "zookepperip:" << m_config.Load("zookepperip") << std::endl;
-    std::cout << "zookepperport:" << m_config.Load("zookepperport") << std::endl;
+    // std::cout << "rpcserverip:" << m_config.Load("rpcserverip") << std::endl;
+    // std::cout << "rpcserverport:" << m_config.Load("rpcserverport") << std::endl;
+    // std::cout << "zookepperip:" << m_config.Load("zookepperip") << std::endl;
+    // std::cout << "zookepperport:" << m_config.Load("zookepperport") << std::endl;
 }
 
 MprpcApplication& MprpcApplication::GetInstance(){
     static MprpcApplication app;
     return app;
+}
+
+MprpcConfig& MprpcApplication::GetMprpcConfig(){
+    return m_config;
 }
