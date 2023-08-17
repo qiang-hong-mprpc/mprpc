@@ -35,9 +35,26 @@ message RegisterResponse
     bool success = 2;
 }
 
+message GetFriendListRequest
+{
+    uint32 userid = 1;
+}
+
+message getFriendListResponse
+{
+    ResultCode rc  = 1;
+    repeated bytes friends = 2;
+
+}
+
 service UserServicesRpc
 {
     // 函数名为Login
     rpc Login(LoginRequest) returns(LoginResponse);
     rpc Register(RegisterRequest) returns(RegisterResponse);
+}
+
+service GetFriendListSerivceRpc
+{
+    rpc getFriendList(GetFriendListRequest) returns(getFriendListResponse);
 }

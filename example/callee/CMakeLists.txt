@@ -1,4 +1,6 @@
-set(SRC_LIST user_services.cc ../user.pb.cc)
+set(SRC_LIST 
+    main.cc
+    ../user.pb.cc)
 
 add_executable(provider ${SRC_LIST})
 
