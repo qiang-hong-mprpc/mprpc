@@ -4,12 +4,14 @@
 #include "MprpcApplication.h"
 #include "user.pb.h"
 #include "MprpcChannel.h"
+#include "MprpcController.h"
 
 int main(int argc, char **argv)
 {
     MprpcApplication::Init(argc, argv);
 
     example::UserServicesRpc_Stub stub(new MprpcChannel());
+    MprpcController mprpc_controller;
 
     // get friend list
     example::GetFriendListRequest get_friend_list_request;
@@ -17,18 +19,25 @@ int main(int argc, char **argv)
 
     example::GetFriendListSerivceRpc_Stub friend_service_stub(new MprpcChannel());
     example::getFriendListResponse get_friend_list_response;
-    friend_service_stub.getFriendList(nullptr, &get_friend_list_request, &get_friend_list_response, nullptr);
-    if (get_friend_list_response.rc().errcode() == 0)
+    friend_service_stub.getFriendList(&mprpc_controller, &get_friend_list_request, &get_friend_list_response, nullptr);
+    if (mprpc_controller.Failed())
     {
-        std::cout << "rpc get friend list success: " << std::endl;
-        for (int i = 0; i < get_friend_list_response.friends_size(); i++)
-        {
-            std::cout << "index: " << (i + 1) << " name: " << get_friend_list_response.friends(i) << std::endl;
-        }
+        std::cout << "controller failed, error_text: " << mprpc_controller.ErrorText() << std::endl;
     }
     else
     {
-        std::cout << "rpc get friend list response error: " << get_friend_list_response.rc().errmsg() << std::endl;
+        if (get_friend_list_response.rc().errcode() == 0)
+        {
+            std::cout << "rpc get friend list success: " << std::endl;
+            for (int i = 0; i < get_friend_list_response.friends_size(); i++)
+            {
+                std::cout << "index: " << (i + 1) << " name: " << get_friend_list_response.friends(i) << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "rpc get friend list response error: " << get_friend_list_response.rc().errmsg() << std::endl;
+        }
     }
 
     // Register
@@ -39,15 +48,22 @@ int main(int argc, char **argv)
 
     example::RegisterResponse register_response;
 
-    stub.Register(nullptr, &register_request, &register_response, nullptr);
+    stub.Register(&mprpc_controller, &register_request, &register_response, nullptr);
 
-    if (register_response.rc().errcode() == 0)
+    if (mprpc_controller.Failed())
     {
-        std::cout << "rpc register response success: " << register_response.success() << std::endl;
+        std::cout << "controller failed, error_text: " << mprpc_controller.ErrorText() << std::endl;
     }
     else
     {
-        std::cout << "rpc register response error: " << register_response.rc().errmsg() << std::endl;
+        if (register_response.rc().errcode() == 0)
+        {
+            std::cout << "rpc register response success: " << register_response.success() << std::endl;
+        }
+        else
+        {
+            std::cout << "rpc register response error: " << register_response.rc().errmsg() << std::endl;
+        }
     }
 
     // Login
@@ -57,15 +73,22 @@ int main(int argc, char **argv)
 
     example::LoginResponse login_response;
 
-    stub.Login(nullptr, &login_request, &login_response, nullptr);
+    stub.Login(&mprpc_controller, &login_request, &login_response, nullptr);
 
-    if (login_response.rc().errcode() == 0)
+    if (mprpc_controller.Failed())
     {
-        std::cout << "rpc login response success: " << login_response.success() << std::endl;
+        std::cout << "controller failed, error_text: " << mprpc_controller.ErrorText() << std::endl;
     }
     else
     {
-        std::cout << "rpc login response error: " << login_response.rc().errmsg() << std::endl;
+        if (login_response.rc().errcode() == 0)
+        {
+            std::cout << "rpc login response success: " << login_response.success() << std::endl;
+        }
+        else
+        {
+            std::cout << "rpc login response error: " << login_response.rc().errmsg() << std::endl;
+        }
     }
     return 0;
 }
