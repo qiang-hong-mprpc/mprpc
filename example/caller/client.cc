@@ -5,6 +5,7 @@
 #include "user.pb.h"
 #include "MprpcChannel.h"
 #include "MprpcController.h"
+#include "ZKClient.h"
 
 int main(int argc, char **argv)
 {

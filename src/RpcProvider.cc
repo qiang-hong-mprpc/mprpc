@@ -6,6 +6,7 @@
 #include "RpcProvider.h"
 #include "MprpcApplication.h"
 #include "client_request.pb.h"
+#include "ZKClient.h"
 
 void RpcProvider::NotifyService(::google::protobuf::Service *service)
 {
@@ -40,6 +41,21 @@ void RpcProvider::Run()
 
     // 线程数量
     tcp_service.setThreadNum(4);
+
+    ZKClient ZkClient;
+    ZkClient.Start();
+    for (auto &service : serivce_map)
+    {
+        std::string service_path = "/" + service.first;
+        ZkClient.Create(service_path.c_str(), nullptr, 0);
+        for (auto &method : service.second.provider_method_map)
+        {
+            std::string method_path = service_path + "/" + method.first;
+            char method_path_data[128] = {0};
+            sprintf(method_path_data, "%s:%d", rpc_service_ip.c_str(), rpc_service_port);
+            ZkClient.Create(method_path.c_str(), method_path_data, strlen(method_path_data), ZOO_EPHEMERAL);
+        }
+    }
 
     std::cout << "rpc provider start service at ip: " << rpc_service_ip << " port: " << rpc_service_port << std::endl;
     tcp_service.start();

@@ -53,10 +53,10 @@ void ZKClient::Create(const char *path, const char *data, int datalen, int state
     char buff[128];
     int buff_len = sizeof(buff);
     int node_exist = zoo_exists(m_zhandle, path, 0, nullptr);
-    if (node_exist == ZNONODE)
+    if (ZNONODE == node_exist)
     {
         int code = zoo_create(m_zhandle, path, data, datalen, &ZOO_OPEN_ACL_UNSAFE, state, buff, buff_len);
-        if (code == ZOK)
+        if (ZOK == code)
         {
             std::cout << "znode create success... patth:" << path << std::endl;
         }
@@ -65,6 +65,10 @@ void ZKClient::Create(const char *path, const char *data, int datalen, int state
             std::cout << "znode create error,path:" << path << " code: " << code << std::endl;
             exit(EXIT_FAILURE);
         }
+    }
+    else
+    {
+        std::cout << "znode create error,path:" << path << " code: " << node_exist << std::endl;
     }
 }
 
