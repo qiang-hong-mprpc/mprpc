@@ -1,7 +1,7 @@
 #include <iostream>
 #include "mprpcApplication.h"
 #include "../friend.pb.h"
-#include "mprpcChannel.h"
+
 
 int main(int argc, char **argv){
 
@@ -13,17 +13,23 @@ int main(int argc, char **argv){
     fixbug::GetFriendListRequest request;
     request.set_userid(1);
     fixbug::GetFriendListResponse response;
-    stub.GetFriendList(nullptr, &request, &response, nullptr);
+
+    MprpcController controller;
+    stub.GetFriendList(&controller, &request, &response, nullptr);
 
     //调用完成，读取结果
-    if(200 == response.result().errcode() ){
-        std::cout<< "rpc get friend list success!" << std::endl;
-        int size = response.friends_size();
-        for(int i=0;i<size;i++){
-            std::cout<< "index " << i + 1 << ": " << response.friends(i) << std::endl;
-        }
+    if(controller.Failed()){
+        std::cout<< controller.ErrorText() <<std::endl;
     } else {
-        std::cout<< "rpc get friend list error: " << response.result().errmsg() << std::endl;
+        if(200 == response.result().errcode() ){
+            std::cout<< "rpc get friend list success!" << std::endl;
+            int size = response.friends_size();
+            for(int i=0;i<size;i++){
+                std::cout<< "index " << i + 1 << ": " << response.friends(i) << std::endl;
+            }
+        } else {
+            std::cout<< "rpc get friend list error: " << response.result().errmsg() << std::endl;
+        }
     }
 
     return 0;
