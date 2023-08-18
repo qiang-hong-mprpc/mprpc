@@ -69,6 +69,7 @@ void ZKClient::Create(const char *path, const char *data, int datalen, int state
     else
     {
         std::cout << "znode create error,path:" << path << " code: " << node_exist << std::endl;
+        exit(EXIT_FAILURE);
     }
 }
 

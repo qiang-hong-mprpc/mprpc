@@ -11,6 +11,7 @@
 #include "client_request.pb.h"
 #include "MprpcApplication.h"
 #include "MprpcController.h"
+#include "ZKClient.h"
 
 void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor *method,
                               google::protobuf::RpcController *controller,
@@ -74,8 +75,24 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor *method,
         return;
     }
 
-    std::string rpc_service_ip = MprpcApplication::GetInstance().GetRpcConfig().Load("rpc_service_ip");
-    uint16_t rpc_service_port = std::atoi(MprpcApplication::GetInstance().GetRpcConfig().Load("rpc_service_port").c_str());
+    ZKClient ZkClient;
+    ZkClient.Start();
+    std::string method_path = "/" + service_name + "/"+method_name;
+    std::string data = ZkClient.GetZnodeData(method_name.c_str());
+    if(data == ""){
+        controller->SetFailed(method_path + " is not exist!");
+        return;
+    }
+    int idx = data.find(":");
+    if(idx != -1)
+    {
+        controller->SetFailed(method_path + " address is invalid!");
+        return;
+    }
+
+
+    std::string rpc_service_ip = data.substr(0,idx);
+    uint16_t rpc_service_port = std::atoi(data.substr(idx+1,data.size()-idx).c_str());
 
     struct sockaddr_in service_addr;
     service_addr.sin_family = AF_INET;
