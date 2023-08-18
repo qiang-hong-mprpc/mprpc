@@ -20,7 +20,7 @@ int main(int argc, char **argv){
     if(200 == response.result().errcode() ){
         std::cout<< "rpc login success: " << response.success() << std::endl;
     } else {
-        std::cout<< "rpc login error: " << response.result().errmsg() << std::endl;
+        std::cout<< "rpc login error: " << response.result().errmsg() << " error code: " << response.result().errcode() << std::endl;
     }
 
     return 0;

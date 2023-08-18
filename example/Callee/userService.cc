@@ -32,8 +32,8 @@ public:
 
         //封装响应内容
         fixbug::ResultCode *resultCode = response->mutable_result();
-        resultCode->set_errcode(200);
-        resultCode->set_errmsg("success");
+        resultCode->set_errcode(1);
+        resultCode->set_errmsg("login error");
         response->set_success(loginResult);
 
         //执行回调

@@ -44,7 +44,7 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
 
     //组织发送rpc请求的字符串
     std::string sendRpcStr;
-    sendRpcStr.insert(0, std::string((char*)&headerSize));
+    sendRpcStr.insert(0, std::string((char*)&headerSize, 4));
     sendRpcStr= sendRpcStr + rpcHeaderStr;
     sendRpcStr = sendRpcStr + argsStr;
 
@@ -89,15 +89,15 @@ void MprpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     //接收response
     char recvBuf[1024] = {0};
     int recvSize = 0;
-    if(-1 == recv(recvSize = clientfd, recvBuf, 1024, 0)){
+    if(-1 == (recvSize = recv(clientfd, recvBuf, 1024, 0))){
         std::cout<< "recv message error! errno: " << errno << std::endl;
         close(clientfd);
         return;
     }
 
-    std::string responseStr(recvBuf, 0, recvSize);
-    if(response->ParseFromString(responseStr)){
-        std::cout<< "parse response error! response string: " << responseStr <<std::endl;
+    // std::string responseStr(recvBuf, 0, recvSize);
+    if(!response->ParseFromArray(recvBuf, recvSize)){
+        std::cout<< "parse response error! response string: " << recvBuf <<std::endl;
         close(clientfd);
         return;
     }
