@@ -44,3 +44,4 @@ private:
         snprintf(c, 1024, logmsgformat, ##__VA_ARGS__); \
         logger.Log(c); \
     } while(0);
+    
