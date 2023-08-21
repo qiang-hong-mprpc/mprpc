@@ -3,9 +3,6 @@
 ### Project Introduction
 The project mainly builds an operational framework based on remote communication services, aiming to complete multiple clients' access to remote servers, including service discovery, service registration, remote service heartbeat mechanism, and remote service invocation
 
-### project use
-
-
 
 ### project column name 
 ```
@@ -22,9 +19,20 @@ example: client and serv
 build.sh: build ptoject, generate project binary and lib files
 ```
 
+### project use
+```
+build: sh build.sh
+
+use client: ./client -i service.conf
+
+use server: ./provider -i service.conf
+
+service found: after install zookeeper, cd zookeeper & ./zkCli.sh ls/ 
+
+```
 
 ### dependence library
-- boost
+- boost  
 - muduo_net muduo_base
 - pthread
 - protobuf
